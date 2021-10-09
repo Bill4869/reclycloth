@@ -1,5 +1,5 @@
 # reclycloth
-
+![demo](/imgs/demo.gif)
 ## Requirements
 - FastAPI
 
