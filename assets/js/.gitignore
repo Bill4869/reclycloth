@@ -1,0 +1,6 @@
+*.pyc
+.idea
+venv
+training_*/
+*pth
+.python-version

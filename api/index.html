@@ -1,0 +1,256 @@
+<html>
+<head>
+    <meta http-qeuiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Fastapi　画像認識テスト</title>
+    <script src="//code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script src="/static/js/post.js"></script>
+</head>
+
+<body>
+
+<!-- ファイル選択ボタン -->
+<div style="width: 500px">
+  <form enctype="multipart/form-data" method="post">
+    <input type="file" name="userfile" accept="image/*"　multiple>
+  </form>
+</div>
+
+<!-- 画像表示領域 -->
+<canvas id="canvas" width="0" height="0"></canvas>
+
+
+<!-- ファイル選択ボタン -->
+<div style="width: 500px">
+  <form enctype="multipart/form-data" method="post">
+    <input type="file" name="userfile1" accept="image/*"　multiple>
+  </form>
+</div>
+
+<!-- 画像表示領域 -->
+<canvas id="canvas1" width="0" height="0"></canvas>
+
+
+<!-- アップロード開始ボタン -->
+<button class="btn btn-primary" id="post">upload</button>
+<canvas id="cvs1" width="300" height="300"></canvas>
+<br>
+<h2 id="result"></h2>
+</body>
+</html>
+
+    <script>
+    // 画像をリサイズして、HTMLで表示する
+$(function () {
+  var file = null;
+  var blob = null;
+  var blob1 = null;
+  const RESIZED_WIDTH = 300;
+  const RESIZED_HEIGHT = 300;
+
+
+
+
+
+  $('input[name="userfile"]').change(function () {
+    file = $(this).prop("files")[0];
+
+    // ファイルチェック
+    if (file.type != "image/jpeg" && file.type != "image/png") {
+      file = null;
+      blob = null;
+      return;
+    }
+
+    var result = document.getElementById("result");
+    result.innerHTML = "";
+
+    // 画像をリサイズする
+    var image = new Image();
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      image.onload = function () {
+        var width, height;
+
+        // 縦or横の長い方に合わせてリサイズする
+        if (image.width > image.height) {
+          var ratio = image.height / image.width;
+          width = RESIZED_WIDTH;
+          height = RESIZED_WIDTH * ratio;
+        } else {
+          var ratio = image.width / image.height;
+          width = RESIZED_HEIGHT * ratio;
+          height = RESIZED_HEIGHT;
+        }
+
+        var canvas = $("#canvas").attr("width", width).attr("height", height);
+        var ctx = canvas[0].getContext("2d");
+        ctx.clearRect(0, 0, width, height);
+        ctx.drawImage(
+          image,
+          0,
+          0,
+          image.width,
+          image.height,
+          0,
+          0,
+          width,
+          height
+        );
+
+        // canvasからbase64画像データを取得し、POST用のBlobを作成する
+        var base64 = canvas.get(0).toDataURL("image/jpeg");
+        var barr, bin, i, len;
+        bin = atob(base64.split("base64,")[1]);
+        len = bin.length;
+        barr = new Uint8Array(len);
+        i = 0;
+        while (i < len) {
+          barr[i] = bin.charCodeAt(i);
+          i++;
+        }
+        blob = new Blob([barr], { type: "image/jpeg" });
+        console.log(blob);
+      };
+      image.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  $('input[name="userfile1"]').change(function () {
+    file = $(this).prop("files")[0];
+
+    // ファイルチェック
+    if (file.type != "image/jpeg" && file.type != "image/png") {
+      file = null;
+      blob = null;
+      return;
+    }
+
+    var result = document.getElementById("result");
+    result.innerHTML = "";
+
+    // 画像をリサイズする
+    var image = new Image();
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      image.onload = function () {
+        var width, height;
+
+        // 縦or横の長い方に合わせてリサイズする
+        if (image.width > image.height) {
+          var ratio = image.height / image.width;
+          width = RESIZED_WIDTH;
+          height = RESIZED_WIDTH * ratio;
+        } else {
+          var ratio = image.width / image.height;
+          width = RESIZED_HEIGHT * ratio;
+          height = RESIZED_HEIGHT;
+        }
+
+        var canvas = $("#canvas1").attr("width", width).attr("height", height);
+        var ctx = canvas[0].getContext("2d");
+        ctx.clearRect(0, 0, width, height);
+        ctx.drawImage(
+          image,
+          0,
+          0,
+          image.width,
+          image.height,
+          0,
+          0,
+          width,
+          height
+        );
+
+        // canvasからbase64画像データを取得し、POST用のBlobを作成する
+        var base64 = canvas.get(0).toDataURL("image/jpeg");
+        var barr, bin, i, len;
+        bin = atob(base64.split("base64,")[1]);
+        len = bin.length;
+        barr = new Uint8Array(len);
+        i = 0;
+        while (i < len) {
+          barr[i] = bin.charCodeAt(i);
+          i++;
+        }
+        blob1 = new Blob([barr], { type: "image/jpeg" });
+        console.log(blob1);
+      };
+      image.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+
+  // アップロード開始ボタンがクリックされたら
+  $("#post").click(function () {
+    if (!file || !blob) {
+      return;
+    }
+
+    var name,
+      fd = new FormData();
+    fd.append("files", blob);
+    fd.append("files", blob1);
+
+    // API宛にPOSTする
+    $.ajax({
+      url: "http://127.0.0.1:8000/api/skechtoimg",
+      type: "POST",
+      dataType: "json",
+      data: fd,
+      processData: false,
+      contentType: false,
+    })
+      .done(function (data, textStatus, jqXHR) {
+          // 通信が成功した場合、結果を出力する
+        var response = JSON.stringify(data);
+        var response = JSON.parse(response);
+        console.log(response);
+        var result = document.getElementById("result");
+        var data = "data:image/jpg;base64,"+response["response"];
+       
+       var cvs = document.getElementById('cvs1');
+  	var ctx= cvs.getContext('2d');
+ 
+  	//画像オブジェクトを生成
+  	var img = new Image();
+  	img.src = data;
+ 
+  	//画像をcanvasに設定
+  	img.onload = function(){
+    	ctx.drawImage(img, 0, 0, 300, 300);
+ 	 }
+ 	 
+ 	 
+ 	 
+      })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+          // 通信が失敗した場合、エラーメッセージを出力する
+        var result = document.getElementById("result");
+        result.innerHTML = "サーバーとの通信が失敗した...";
+      });
+  });
+});
+
+    </script>
+    
+
