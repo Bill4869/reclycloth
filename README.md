@@ -1,4 +1,12 @@
 # reclycloth
+**Hack Aichi 2021 - 2nd Place**
+
+**Theme:** sustainble fashion
+
+This project's functions include:
+- Replace the top part's texture with the selected one
+- Generate objects from sketches and replace their textures with the selected one
+- Generate images from semantic segmentation using semantic manipulation, and change the top part's texture with the selected one
 ![demo](/imgs/demo.gif)
 ## Requirements
 - FastAPI
@@ -6,15 +14,15 @@
 ## Getting Started
 
 ### Pretrained models
-[Download](https://drive.google.com/file/d/1og_9By_xdtnEd9-xawAj4jYbXR6A9deG/view) the models and create the following directories
+[Download](https://drive.google.com/file/d/1og_9By_xdtnEd9-xawAj4jYbXR6A9deG/view) the models and create the following directories ([original repository](https://github.com/Seanseattle/SMIS))
 ```
-checkpoints/ade20k_smis
-checkpoints/cityscapes_smis
-checkpoints/deepfashion_smis
+api/checkpoints/ade20k_smis
+api/checkpoints/cityscapes_smis
+api/checkpoints/deepfashion_smis
 ```
-[Download](https://drive.google.com/file/d/1l7PUB8uAGRyqvZ0ti0ZACoI2CzJxOVoI/view) the model and put in the following directory
+[Download](https://drive.google.com/file/d/1l7PUB8uAGRyqvZ0ti0ZACoI2CzJxOVoI/view) the model and put in the following directory ([original repository](https://github.com/anish9/Fashion-AI-segmentation))
 ```
-pretrain/
+api/pretrain/
 ```
 
 ### Run API
