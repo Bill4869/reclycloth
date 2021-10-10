@@ -1,4 +1,6 @@
 # reclycloth
+[SLIDES and VIDEO](https://drive.google.com/drive/folders/1oeLI2vDESiZ2I11qH6NPFbnLGIcn3LNa?usp=sharing)
+
 **Hack Aichi 2021 - 2nd Place**
 
 **Theme:** sustainble fashion
